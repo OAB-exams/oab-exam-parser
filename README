@@ -1,0 +1,15 @@
+# -*- mode:org -*-
+#+TITLE: OAB exam parser
+
+the =oab-exam= executable can parse and validate OAB exams in their
+plaintext format and print their XML representation.
+
+* installation
+either
+: cabal install
+or
+: stack build --copy-bins
+in the root directory of this repository.
+
+* use
+: oab-exam xml [exam-file]

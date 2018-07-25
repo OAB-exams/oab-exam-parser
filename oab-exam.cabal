@@ -1,0 +1,30 @@
+name:                oab-exam
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/oab-exams/parser#readme
+license:             BSD3
+license-file:        LICENSE
+author:              bruno cuconato
+maintainer:          bcclaro+oab+hackage@gmail.com
+copyright:           2018 bruno cuconato
+category:            Web
+build-type:          Simple
+cabal-version:       >=1.10
+extra-source-files:  README
+
+executable oab-exam
+  hs-source-dirs:      src
+  main-is:             Main.hs
+  default-language:    Haskell2010
+  build-depends:       base >= 4.7 && < 5,
+                       megaparsec ==6.*,
+                       xmlgen ==0.6.*,
+                       bytestring ==0.10.*,
+                       filepath ==1.4.*,
+                       text ==1.*
+--                       lucid >=2 && <3b
+  other-modules:       Exam.Type,
+                       Exam.Parse,
+                       Exam.IO,
+                       Exam.XML
