@@ -25,7 +25,7 @@ question :: Question -> Xml Elem
 question q = xelem "question"
   $ xattrs' ["number" <#> number q,
              "valid" <#> if valid q then "true" else "false",
-             "area" <#> area q]
+             "area" <#> intercalate "|" (area q)]
   <#> xelems ((xelem "statement" $ xtext (instr q)) : [is])
   where
     is = xelems $ fmap item (items q)
