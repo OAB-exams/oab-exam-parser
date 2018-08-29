@@ -26,9 +26,10 @@ import Data.Void (Void)
 import System.FilePath
 
 import Text.Megaparsec
-       (ParseError, Parsec, (<?>), between, choice, sepBy1, eof,
+       (ParseError, Parsec, (<?>), between, choice, eitherP, eof,
         lookAhead, many, optional, parse, parseErrorPretty,
-        some, takeWhileP, someTill, skipManyTill, try, withRecovery)
+        sepBy1, some, someTill, skipManyTill,
+        takeWhileP, try, withRecovery)
 import           Text.Megaparsec.Char
 import qualified Text.Megaparsec.Char.Lexer as L
 
@@ -109,14 +110,16 @@ paragraph = fmap T.pack . lexeme $ par
   where
     par :: Parser String
     par = do
-      c <- anyChar
-      if c == '\n'
-        then do
-        cs <- sawNewline
-        return $ c:cs
-        else do
-        cs <- par
-        return $ c:cs
+      ec <- eitherP anyChar eof
+      case ec of
+        Left '\n' -> do
+          cs <- sawNewline
+          return $ '\n':cs
+        Right _ -> do
+          return ""
+        Left c -> do
+          cs <- par
+          return $ c:cs
     sawNewline :: Parser String
     sawNewline = do
         ss <- many spaceChar

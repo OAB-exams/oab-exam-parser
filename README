@@ -13,3 +13,7 @@ in the root directory of this repository.
 
 * use
 : oab-exam xml [exam-file]
+
+if you want to convert to XML all exams in a directory and
+pretty-print them:
+: for f in *.txt; do oab-exam xml $f | xmllint - > $f.xml ; done
