@@ -99,6 +99,7 @@ optionsP = collect $ fmap itemP ["A", "B", "C", "D"]
       b <- optional $ symbol ":CORRECT"
       _ <- symbol ")"
       i <- paragraph
+      ws
       return $ Item l (isJust b) i
 
 ---
