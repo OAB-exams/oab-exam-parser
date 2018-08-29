@@ -43,27 +43,24 @@ type RawData t e = [Either (ParseError t e) Question]
 ---
 -- exam parsers
 examP :: Parser (RawData Char Void)
-examP = between ws eof (e `sepBy1` sep)
+examP = between ws eof $ some e
   where
     e = withRecovery recover (Right <$> questionP)
     recover err = Left err <$
-      skipManyTill anyChar (try $ lookAhead (symbol "---" <* symbol' "ENUM" <?> "Consume question with error."))
-    sep = symbol "---"
+      skipManyTill anyChar (try $ lookAhead (symbol "\n" <* symbol "\n" <* symbol' "Questão" <?> "Consume question with error."))
 
 questionP :: Parser Question
 questionP = do
-  v <- validP
+  symbol' "Questão"
   n <- numberP
+  v <- validP
   a <- areaP
   inst <- instructionP
   is <- optionsP
   return $ Question v n a inst is
 
 validP :: Parser Bool
-validP = fmap isNothing
-  (symbol' "ENUM" *>
-    optional (symbol' "NULL")
-    <* symbol "Questão")
+validP = fmap isNothing $ optional $ symbol' "NULL"
 
 numberP :: Parser T.Text
 numberP = do
@@ -71,7 +68,7 @@ numberP = do
   return $ T.pack n
 
 areaP :: Parser Area
-areaP = symbol' "AREA" *> choice (fmap symbol' [
+areaP = symbol' "AREA" *> (many $ choice $ fmap symbol' [
   "ADMINISTRATIVE",
   "BUSINESS",
   "CHILDREN",
@@ -102,6 +99,7 @@ optionsP = collect $ fmap itemP ["A", "B", "C", "D"]
       b <- optional $ symbol ":CORRECT"
       _ <- symbol ")"
       i <- paragraph
+      ws
       return $ Item l (isJust b) i
 
 ---

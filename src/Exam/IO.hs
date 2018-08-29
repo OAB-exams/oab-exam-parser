@@ -6,6 +6,7 @@ import Exam.Type
 import Exam.Parse
 import Exam.XML
 
+import System.IO
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import qualified Data.Text.IO as TI
 
@@ -18,7 +19,7 @@ readExam :: FilePath -> IO Exam
 readExam fp = do
   et <- TI.readFile fp
   case parseExam fp et of
-    Left err -> putStrLn err *> return (Exam "" "" [])
+    Left err -> hPutStrLn stderr err *> return (Exam "" "" [])
     Right e -> return e
 
 printExam :: Exam -> IO ()

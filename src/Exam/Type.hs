@@ -22,5 +22,5 @@ data Item = Item { letter  :: Letter,
                  } deriving (Eq,Show)
 
 type Letter = Text
-type Area = Text
+type Area = [Text]
 type Instr = Text
